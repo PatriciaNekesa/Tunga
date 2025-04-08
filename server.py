@@ -7,10 +7,15 @@ from wtforms import StringField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
+from posts.posts_blueprint import posts_blueprint
+
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'  # Use PostgreSQL in production
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your_secret_key'
+
+app.register_blueprint(posts_blueprint, url_prefix='/posts')
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -48,11 +53,7 @@ class PostForm(FlaskForm):
 with app.app_context():
     db.create_all()
 
-# Dummy blog posts
-posts = [
-    {"title": "First Blog Post", "content": "This is my first blog post!", "author": "Jane Doe"},
-    {"title": "Second Blog Post", "content": "This is another blog post!", "author": "John Doe"}
-]
+
 
 @app.route('/')
 @login_required
@@ -65,12 +66,7 @@ def home():
 def about():
     return render_template('about.html')
 
-# Dynamic routes
-@app.route('/post/<int:post_id>')
-def view_post(post_id):
-    # Logic to view a given post by post_id
-    if 0 <= post_id < len(posts):
-        return render_template('post.html', post=posts[post_id])
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -112,18 +108,7 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/create', methods=['GET', 'POST'])
-@login_required
-def create_post():
-    form = PostForm()
-    if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author_id=current_user.id)
-        db.session.add(post)
-        db.session.commit()
-        flash('Post created successfully!', 'success')
-        return redirect(url_for('home'))
 
-    return render_template('create_post.html', form=form)
 
 if __name__ == '__main__':
     app.run()
