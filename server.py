@@ -9,5 +9,9 @@ def hello_world():
 def about():
     return 'This is the about page'
 
+@app.route('/post/<int:post_id>')
+def view_post(post_id):
+    return f'Viewing blog post #{post_id}'
+
 if __name__ == '__main__':
     app.run()
