@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, url_for
 app = Flask(__name__)
 
 @app.route('/')
@@ -13,9 +13,18 @@ def about():
 def view_post(post_id):
     return f'Viewing blog post #{post_id}'
 
+# @app.route('/user/<username>')
+# def user_profile(username):
+#     return f'profile{username}'
+
+
 @app.route('/user/<username>')
 def user_profile(username):
-    return f'profile{username}'
+    url = url_for('user_profile', username='John')
+    print(url)  # Output: /user/John
+    return f'Profile: {username}'
+
+
 
 if __name__ == '__main__':
     app.run()
