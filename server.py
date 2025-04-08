@@ -2,7 +2,6 @@ from flask import Flask, render_template
 app = Flask(__name__)
 
 
-
 # Dummy blog posts
 posts = [
     {"title": "First Blog Post", "content": "This is my first blog post!", "author": "Jane Doe"},
