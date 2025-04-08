@@ -17,7 +17,6 @@ def view_post(post_id):
 # def user_profile(username):
 #     return f'profile{username}'
 
-
 @app.route('/user/<username>')
 def user_profile(username):
     url = url_for('user_profile', username='John')
